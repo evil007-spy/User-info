@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Info Collector</title>
+</head>
+<body>
+    <h2>User Information</h2>
+    <p><strong>IP Address:</strong> <span id="ip"></span></p>
+    <p><strong>Device & Browser:</strong> <span id="device"></span></p>
+    <p><strong>Location:</strong> <span id="location"></span></p>
+
+    <script>
+        // Get IP address
+        fetch("https://api64.ipify.org?format=json")
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById("ip").innerText = data.ip;
+            })
+            .catch(error => console.error("IP fetch error:", error));
+
+        // Get Device & Browser Info
+        document.getElementById("device").innerText = navigator.userAgent;
+
+        // Get Location (requires user permission)
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                position => {
+                    let lat = position.coords.latitude;
+                    let lon = position.coords.longitude;
+                    document.getElementById("location").innerText = `Lat: ${lat}, Lon: ${lon}`;
+                },
+                error => {
+                    document.getElementById("location").innerText = "Location access denied.";
+                }
+            );
+        } else {
+            document.getElementById("location").innerText = "Geolocation not supported.";
+        }
+    </script>
+</body>
+</html>
